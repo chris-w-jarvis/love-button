@@ -1,6 +1,6 @@
 let destKeyElement = document.getElementById('destKey')
 let sourceKeyIn = document.getElementById('sourceKeyIn')
-let sendPaymentForm = document.getElementById('sendPaymentForm')
+let sendPaymentBtn = document.getElementById('sendPaymentBtn')
 let xlmPrice = document.getElementById('xlmPrice')
 let priceCheckBtn = document.getElementById('priceCheck')
 
@@ -29,9 +29,22 @@ priceCheckBtn.onclick = function(e) {
     })
 }
 
-// if i make this a normal button rather than a submit (so that it won't reload), I can probably show the success alert
-sendPaymentForm.onsubmit = function(e) {
-  if (destKeyElement.innerHTML != 'Destination key not set' && sourceKeyIn.value != '') {
-      $.post( 'https://love-button.glitch.me/sendMoney', {source: sourceKeyIn.value, destination: destKeyElement.innerHTML, amount: '1'})
-  } else alert('Destination key or source key not set')
+// More detailed error messaging, send error message to user from server (not enough money, etc)
+sendPaymentBtn.onclick = function (e) {
+    if (destKeyElement.innerHTML != 'Destination key not set' && sourceKeyIn.value != '') {
+        $.post({url:'https://love-button.glitch.me/sendMoney',
+            data:{source: sourceKeyIn.value, destination: destKeyElement.innerHTML, amount: '1'},
+            // statusCode: {
+            //     400: function() {
+            //         alert('Request failed, check your private key.');
+            //     }
+            // },
+            success: function() {
+                alert('Success')
+            },
+            error: function() {
+                alert('Request failed, check your private key.');
+        }
+        })
+    } else alert('Destination key or source key not set')
 }
