@@ -1,22 +1,43 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <style>
-      button {
-        height: 30px;
-        width: 30px;
-        outline: none;
-      }
-    </style>
+    <link rel="stylesheet" href="styles/w3.css">
   </head>
   <body>
-    <h3 id="aboutLink">Love Button</h3>
-    <p id="destKey">loading</p>
-    <p id="xlmPrice">loading</p>
-    <button type="button" id="priceCheck">Check price</button>
-    <input type="text" id="sourceKeyIn" placeholder="your private key">
-    <button type="button" id="sendPaymentBtn">Send 1 unit</button>
-    <script src="jquery-3.3.1.min.js"></script>
-    <script src="popup.js"></script>
+
+    <div class="w3-card-4">
+
+      <header class="w3-container w3-red">
+        <h1>Love Button</h1>
+      </header>
+
+      <div class="w3-container">
+        <div id="sendPaymentDiv" style="border:12px solid white" class="w3-panel w3-hover-border-pink">
+          <label>Public Key on this page:</label>
+          <p id="destKey">loading</p>
+          <input type="text" id="sourceKeyIn" placeholder="your private key" class="w3-input w3-border w3-round">
+          <select id="selectedCurrency">
+            <option value="xlm" selected="selected">XLM</option>
+            <option value="usd">USD (USD val translated to XLM)</option>
+          </select>
+          <button type="button" id="sendPaymentBtn">Send Payment</button>
+        </div>
+        <div id="priceCheckDiv" style="border:12px solid white" class="w3-panel w3-hover-border-pink">
+          <p id="xlmPrice">loading</p>
+          <button type="button" id="priceCheck">Check price</button>
+        </div>
+        <div id="accountBalanceOuterDiv">
+          <div id="accountBalanceDiv" style="border:8px solid white"></div>
+          <button type="button" id="accountBalanceCheck">Check acct. balance</button>
+        </div>
+      </div>
+
+      <footer class="w3-container w3-red">
+        <a href="https://love-button.glitch.me/about">About</a>
+      </footer>
+
+    </div>
   </body>
+  <script src="jquery-3.3.1.min.js"></script>
+  <script src="popup.js"></script>
 </html>
