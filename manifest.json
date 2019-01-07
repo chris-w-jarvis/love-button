@@ -1,8 +1,8 @@
 {
-    "name": "Getting Started Example",
+    "name": "Love Button for Youtube",
     "version": "1.0",
-    "description": "Build an Extension!",
-    "permissions": ["storage", "declarativeContent", "activeTab"],
+    "description": "Micro-tipping app for Youtube",
+    "permissions": ["storage", "declarativeContent", "activeTab", "https://love-button.glitch.me/*"],
     "background": {
         "scripts": ["jquery-3.3.1.min.js","background.js"],
         "persistent": false
@@ -18,7 +18,7 @@
     },
     "content_scripts": [
         {
-            "matches": ["https://love-button.glitch.me/*"],
+            "matches": ["https://www.youtube.com/watch?v=*"],
             "js": ["contentScript.js"]
         }
     ],

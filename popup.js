@@ -5,6 +5,34 @@ let xlmPrice = document.getElementById('xlmPrice')
 let priceCheckBtn = document.getElementById('priceCheck')
 let acctBalanceBtn = document.getElementById('accountBalanceCheck')
 let acctBalanceDiv = document.getElementById('accountBalanceDiv')
+let selectedCurrency = document.getElementById('selectedCurrency')
+let paymentAmount = document.getElementById('paymentAmount')
+let stellarLedgerUrl = 'http://testnet.stellarchain.io/tx/'
+
+function checkXLM() {
+    xlmPrice.innerText = 'loading'
+    $.get('https://love-button.glitch.me/priceCheck', function(price) {
+        xlmPrice.innerText = `1 Stellar(XLM) is worth ${price.price} USD`
+        chrome.storage.sync.set({'xlmPrice': price.price})
+        //if (priceCheckBtn.innerText === 'Check price') priceCheckBtn.innerText = 'Update price'
+    })
+}
+
+function sendPayment(amount) {
+    if (amount <= 0) {
+        alert("Can't send 0")
+        return
+    }
+    $.post({url:'https://love-button.glitch.me/sendMoney',
+        data:{source: sourceKeyIn.value, destination: destKeyElement.innerHTML, amount: amount},
+        success: function(res) {
+            alert(`Success, sent ${amount} XLM\nSee this transaction on Stellar public ledger: ${stellarLedgerUrl}${res.hash}`)
+        },
+        error: function() {
+            alert('Request failed, check your private key.');
+        }
+    })
+}
 
 // I think this works because popup.js doesn't run until you open the popup? if not set to button
 chrome.storage.sync.get(['destKey'], function (res) {
@@ -14,7 +42,7 @@ chrome.storage.sync.get(['destKey'], function (res) {
 
 chrome.storage.sync.get(['xlmPrice'], function (res) {
     if (res.xlmPrice) xlmPrice.innerHTML = `1 Stellar(XLM) is worth ${res.xlmPrice} USD`
-    else xlmPrice.innerHTML = 'Please click "Check price" for first time'
+    else checkXLM()
 })
 
 chrome.runtime.onMessage.addListener(
@@ -24,19 +52,10 @@ chrome.runtime.onMessage.addListener(
   });
 
 priceCheckBtn.onclick = function(e) {
-    xlmPrice.innerText = 'loading'
-    $.get('https://love-button.glitch.me/priceCheck', function(price) {
-        xlmPrice.innerText = `1 Stellar(XLM) is worth ${price.price} USD`
-        chrome.storage.sync.set({'xlmPrice': price.price})
-        if (priceCheckBtn.innerText === 'Check price') priceCheckBtn.innerText = 'Update price'
-    })
+    checkXLM()
 }
 
 acctBalanceBtn.onclick = function(e) {
-    if (priceCheckBtn.innerText === 'Check price') {
-        alert('Sorry, please click "Check Price" once before using this feature')
-        return
-    }
     if (acctBalanceDiv.firstChild) acctBalanceDiv.removeChild(acctBalanceDiv.firstChild)
     if (sourceKeyIn.value != '') {
         $.post({
@@ -62,20 +81,19 @@ acctBalanceBtn.onclick = function(e) {
 
 // More detailed error messaging, send error message to user from server (not enough money, etc)
 sendPaymentBtn.onclick = function (e) {
-    if (destKeyElement.innerHTML != 'Destination key not set' && sourceKeyIn.value != '') {
-        $.post({url:'https://love-button.glitch.me/sendMoney',
-            data:{source: sourceKeyIn.value, destination: destKeyElement.innerHTML, amount: '1'},
-            // statusCode: {
-            //     400: function() {
-            //         alert('Request failed, check your private key.');
-            //     }
-            // },
-            success: function() {
-                alert('Success\nSee this transaction on Stellar public ledger: https://stellarchain.io/')
-            },
-            error: function() {
-                alert('Request failed, check your private key.');
+    if (destKeyElement.innerHTML != 'No destination key on this page' && sourceKeyIn.value != '') {
+        if (paymentAmount.value.match(/[a-z]/i) || !paymentAmount.value.match(/[0-9]/)) {
+            alert('Numbers only and not empty')
+            return
         }
-        })
+        // determine amount
+        if (selectedCurrency.value === 'usd') {
+            chrome.storage.sync.get(['xlmPrice'], function (res) {
+                var amount = parseFloat(paymentAmount.value) / parseFloat(res.xlmPrice)
+                sendPayment(amount.toFixed(6).toString())
+            })
+        } else {
+            sendPayment(parseFloat(paymentAmount.value).toFixed(6).toString())
+        }
     } else alert('Destination key or source key not set')
 }

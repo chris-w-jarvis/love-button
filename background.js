@@ -8,8 +8,11 @@ chrome.runtime.onInstalled.addListener(function() {
     // it appears an action is composed of arrays of conditions and actions
     chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
       chrome.declarativeContent.onPageChanged.addRules([{
-        conditions: [new chrome.declarativeContent.PageStateMatcher({
-          pageUrl: {hostEquals: 'love-button.glitch.me'},
+          conditions: [
+            new chrome.declarativeContent.PageStateMatcher({
+              pageUrl: { hostEquals: 'www.youtube.com', schemes: ['https'] },
+        // conditions: [new chrome.declarativeContent.PageStateMatcher({
+        //   pageUrl: {hostEquals: 'https://www.youtube.com/*'},
         })
         ],
           actions: [new chrome.declarativeContent.ShowPageAction()]
