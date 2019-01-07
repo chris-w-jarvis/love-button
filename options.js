@@ -1,15 +1,17 @@
-let page = document.getElementById('buttonDiv');
-const kButtonColors = ['#3aa757', '#e8453c', '#f9bb2d', '#4688f1'];
-function constructOptions(kButtonColors) {
-  for (let item of kButtonColors) {
-    let button = document.createElement('button');
-    button.style.backgroundColor = item;
-    button.addEventListener('click', function() {
-      chrome.storage.sync.set({color: item}, function() {
-        console.log('color is ' + item);
-      })
-    });
-    page.appendChild(button);
+let defaultInput = document.getElementById('default')
+let selectedCurrency = document.getElementById('selectedCurrency')
+let defaultBtn = document.getElementById('defaultBtn')
+
+defaultBtn.onclick = function (e) {
+  if (defaultInput.value.match(/[a-z]/i) || !defaultInput.value.match(/[0-9]/)) {
+    alert('Numbers only and not empty')
+    return
   }
+  if (parseFloat(defaultInput.value).toFixed(6) <= 0) {
+    alert("Can't send 0 or negative")
+    return
+  }
+  chrome.storage.sync.set({defaultAmount: defaultInput.value})
+  chrome.storage.sync.set({defaultCurrency: selectedCurrency.value})
+  alert('Changed')
 }
-constructOptions(kButtonColors);

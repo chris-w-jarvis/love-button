@@ -25,8 +25,15 @@ chrome.runtime.onInstalled.addListener(function() {
         if (request.type == 'setDestKey') {
           // store destination key
           // POSSIBLE ERROR: this will be reset if you have multiple videos open
-          // FIX: put part of url (video id?) into key
+          // FIX: send channel name with key to be displayed in extension
           chrome.storage.sync.set({destKey: request.publicKey})
         }
     });
+
+    // handle youtube's pushState based navigation
+    chrome.webNavigation.onHistoryStateUpdated.addListener(function callback(details) {
+      chrome.tabs.executeScript({
+        file: "contentScript.js"
+      })
+    }, {url: [{hostSuffix: 'youtube.com'}]})
 });

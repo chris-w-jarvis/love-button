@@ -21,11 +21,12 @@
             <option value="usd">USD (USD val translated to XLM)</option>
           </select>
           <input type="text" id="paymentAmount" placeholder="Payment amount">
+          <button type="text" id="defaultPaymentAmountBtn" title="Change default in options page for this extension">.02$</button>
           <button type="button" id="sendPaymentBtn">Send Payment</button>
         </div>
         <div id="priceCheckDiv" style="border:12px solid white" class="w3-panel w3-hover-border-pink">
           <p id="xlmPrice">loading</p>
-          <button type="button" id="priceCheck">Update price</button>
+          <button type="button" id="priceCheck" title="Updated at most 5 minutes ago">Update price</button>
         </div>
         <div id="accountBalanceOuterDiv">
           <div id="accountBalanceDiv" style="border:8px solid white"></div>

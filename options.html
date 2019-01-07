@@ -2,19 +2,17 @@
 <html>
   <head>
     <style>
-      button {
-        height: 30px;
-        width: 30px;
-        outline: none;
-        margin: 10px;
-      }
     </style>
   </head>
   <body>
-    <div id="buttonDiv">
-    </div>
     <div>
-      <p>Choose a different background color!</p>
+      <p>Set the value of your default amount button</p>
+      <input id="default" type="text" placeholder="default amount">
+      <select id="selectedCurrency">
+        <option value="xlm" selected="selected">XLM</option>
+        <option value="usd">USD (USD val translated to XLM)</option>
+      </select>
+      <button id="defaultBtn" type="text">Save</button>
     </div>
   </body>
   <script src="options.js"></script>
