@@ -7,6 +7,7 @@ let acctBalanceBtn = document.getElementById('accountBalanceCheck')
 let acctBalanceDiv = document.getElementById('accountBalanceDiv')
 let selectedCurrency = document.getElementById('selectedCurrency')
 let paymentAmount = document.getElementById('paymentAmount')
+let publicKeyLabel = document.getElementById('publicKeyLabel')
 let defaultPaymentBtn = document.getElementById('defaultPaymentAmountBtn')
 let stellarLedgerUrl = 'http://testnet.stellarchain.io/tx/'
 
@@ -65,6 +66,12 @@ function sendPayment(amount) {
 chrome.storage.sync.get(['destKey'], function (res) {
     if (res.destKey) destKeyElement.innerHTML = res.destKey
     else destKeyElement.innerHTML = 'No destination key on this page'
+})
+
+chrome.storage.sync.get(['channel'], function (res) {
+    if (res.channel) {
+        publicKeyLabel.innerHTML = `Public Key for <b>${res.channel}</b>:`
+    }
 })
 
 chrome.runtime.onMessage.addListener(

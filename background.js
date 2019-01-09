@@ -22,18 +22,26 @@ chrome.runtime.onInstalled.addListener(function() {
     // listen for public key message from content script
     chrome.runtime.onMessage.addListener(
       function(request, sender, sendResponse) {
-        if (request.type == 'setDestKey') {
+        console.log(request)
+        if (request.type === 'setDestKey') {
           // store destination key
           // POSSIBLE ERROR: this will be reset if you have multiple videos open
           // FIX: send channel name with key to be displayed in extension
           chrome.storage.sync.set({destKey: request.publicKey})
+        } else if (request.type === 'setChannel') {
+          chrome.storage.sync.set({channel: request.channel})
         }
     });
 
     // handle youtube's pushState based navigation
     chrome.webNavigation.onHistoryStateUpdated.addListener(function callback(details) {
-      chrome.tabs.executeScript({
-        file: "contentScript.js"
-      })
+      console.log(details.url)
+      if (details.url.includes('watch?v=')) {
+        chrome.tabs.executeScript({
+          file: "contentScript.js"
+        })
+      } else {
+        chrome.storage.sync.clear()
+      }
     }, {url: [{hostSuffix: 'youtube.com'}]})
 });

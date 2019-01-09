@@ -1,24 +1,32 @@
-//alert("loaded script")
+alert("loaded script")
 
 var re = /!\$\^%LOVE{ [A-Z0-9]{56} Don't know what this is\?\? Google "love-button" }LOVE\$\$/
 
 // remember this returns an array (id is one because ids are unique)
 setTimeout(() => {
     const description = document.getElementsByClassName('content style-scope ytd-video-secondary-info-renderer')
-    const match = description[0].innerHTML.match(re)
+    if (description[0]) {
+        console.log(description[0].innerHTML)
 
-    if (match) {
-        // get public key to be able to send to it
-        const destKey = match[0].split(' ')[1]
+        const match = description[0].innerHTML.match(re)
 
-        // send message to extension
-        chrome.runtime.sendMessage({publicKey: destKey, type: 'setDestKey'})
+        if (match) {
+            // get public key to be able to send to it
+            const destKey = match[0].split(' ')[1]
 
-        // remove text
-        description[0].innerHTML = description[0].innerHTML.replace(re, '')
+            // send message to extension
+            chrome.runtime.sendMessage({publicKey: destKey, type: 'setDestKey'})
 
-        // change text into button
-        // maybe not for just the youtube version
+            // remove text (creates tons of weird errors)
+            //description[0].innerHTML = description[0].innerHTML.replace(re, '')
 
+        } else chrome.runtime.sendMessage({publicKey: 'No destination key on this page', type: 'setDestKey'})
     } else chrome.runtime.sendMessage({publicKey: 'No destination key on this page', type: 'setDestKey'})
-}, 1000)
+
+    // send channel to background
+    const channel = document.getElementsByClassName('yt-simple-endpoint style-scope yt-formatted-string')
+    if (channel[0]) {
+        chrome.runtime.sendMessage({channel: channel[0].innerHTML, type: 'setChannel'})
+    } else chrome.runtime.sendMessage({channel: 'NOT_A_VIDEO', type: 'setChannel'})
+
+}, 1500)
