@@ -1,4 +1,4 @@
-alert("loaded script")
+// alert("loaded script")
 
 var re = /!\$\^%LOVE{ [A-Z0-9]{56} Don't know what this is\?\? Google "love-button" }LOVE\$\$/
 

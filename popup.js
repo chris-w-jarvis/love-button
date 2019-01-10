@@ -96,8 +96,7 @@ acctBalanceBtn.onclick = function(e) {
                     if (res.xlmPrice) {
                         var usd = parseFloat(balance.balance) * parseFloat(res.xlmPrice)
                         var xlm = parseFloat(balance.balance).toFixed(3)
-                        var acctBal = document.createTextNode(`Account balance: ${xlm} XLM which is ~${usd.toFixed(3)} USD`)
-                        acctBalanceDiv.appendChild(acctBal)
+                        acctBalanceDiv.innerText = `Account balance: ${xlm} XLM which is ~${usd.toFixed(3)} USD`
                     }
                 })
             },
